@@ -1,0 +1,40 @@
+##mother/daughter mothur batch file
+##manuscript github repository
+
+##mothur v.1.36.1
+make.contigs(file=motherdaughter.files.txt, processors=10)
+summary.seqs(fasta=motherdaughter.files.trim.contigs.fasta, processors=10)
+screen.seqs(fasta=motherdaughter.files.trim.contigs.fasta, group=motherdaughter.files.contigs.groups, maxambig=0, maxlength=275, processors=10)
+unique.seqs(fasta=motherdaughter.files.trim.contigs.good.fasta)
+count.seqs(name=motherdaughter.files.trim.contigs.good.names, group=motherdaughter.files.contigs.good.groups)
+summary.seqs(count=motherdaughter.files.trim.contigs.good.count_table, processors=10)
+pcr.seqs(fasta=silva.bacteria.fasta, start=11894, end=25319, keepdots=F, processors=10)
+system(mv silva.bacteria.pcr.fasta silva.v4.fasta)
+summary.seqs(fasta=silva.v4.fasta, processors=10)
+align.seqs(fasta=motherdaughter.files.trim.contigs.good.unique.fasta, reference=silva.v4.fasta, processors=10)
+summary.seqs(fasta=motherdaughter.files.trim.contigs.good.unique.align, count=motherdaughter.files.trim.contigs.good.count_table, processors=10)
+screen.seqs(fasta=motherdaughter.files.trim.contigs.good.unique.align, count=motherdaughter.files.trim.contigs.good.count_table, summary=motherdaughter.files.trim.contigs.good.unique.summary, start=1968, end=11550, maxhomop=8, processors=10)
+summary.seqs(fasta=current, count=current, processors=10)
+filter.seqs(fasta=motherdaughter.files.trim.contigs.good.unique.good.align, vertical=T, trump=., processors=10)
+unique.seqs(fasta=motherdaughter.files.trim.contigs.good.unique.good.filter.fasta, count=motherdaughter.files.trim.contigs.good.good.count_table)
+pre.cluster(fasta=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.fasta, count=motherdaughter.files.trim.contigs.good.unique.good.filter.count_table, diffs=2, processors=10)
+chimera.uchime(fasta=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.fasta, count=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.count_table, dereplicate=t, processors=10)
+remove.seqs(fasta=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.fasta, accnos=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.accnos, count=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.count_table)
+summary.seqs(fasta=current, count=current, processors=10)
+classify.seqs(fasta=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta, count=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.count_table, reference=trainset9_032012.pds.fasta, taxonomy=trainset9_032012.pds.tax, cutoff=80)
+remove.lineage(fasta=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.fasta, count=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.count_table, taxonomy=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.taxonomy, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota)
+count.seqs(name=current, group=current)
+dist.seqs(fasta=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, cutoff=0.20)
+cluster(column=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.dist, count=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table)
+make.shared(list=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, count=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table, label=0.03)
+classify.otu(taxonomy=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pds.wang.pick.taxonomy, list=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, count=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table, label=0.03)
+get.oturep(column=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.dist, count=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.denovo.uchime.pick.pick.count_table, fasta=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.fasta, list=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.list, label=0.03)
+
+##Analysis of samples with at least 1000 sequences
+##mothur v.1.39.5
+get.groups(shared=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.shared, groups=S58882-J63293-E4344B-D64462-8911J4-9565L3-6136T2-S58884-4302P3-9565LB-S58881-A7130B-Q55193-6136T3-D6446B-1401A2-D64461-B8231B-8911J1-4738BB-4738B4-9385EB-T49421-1401A3-4738B1-F70862-1401AB-4302P2-4302PB-F70861-4738B2-8911J2-9565L1-5251Q4-A71301-A71302-F70863-D64464-2578D1-4302P4-P89821-B82312-6806SB-B82311-2578D2-1401A1-P89824-4302P1-5251Q1-4738B3-D64463-5251QB-B82314-3691FB-5251Q3-B82313-2578D3-5251Q2-6806S4-9565L2-6806S1-P8982B-2578DB-U1240B-3946N4-N8418B-L88954-A71303-N84183-3946N1-T4942B-J6329B-J63291-Q5519B-8911JB-9565L4-T49422-3946NB-3946N2-3946N3-N84182-Q55194-6136T1-P89822-6136TB-F7086B-L8895B-3691F3-Q55192-6806S2-T49423-3691F1-L88953-L88952-6806S3-5005UB-N84181-Q55191-P89823-3691F2-L88951)
+summary.shared(shared=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.0.03.pick.shared, calc=thetayc)
+dist.shared(shared=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.0.03.pick.shared, calc=thetayc)
+pcoa(phylip=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.0.03.pick.thetayc.0.03.lt.dist)
+corr.axes(shared=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.0.03.pick.shared, axes=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.0.03.pick.thetayc.0.03.lt.pcoa.axes, numaxes=2)
+
