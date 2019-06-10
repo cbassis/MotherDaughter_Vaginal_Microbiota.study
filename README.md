@@ -1,7 +1,8 @@
 ## Mother Daughter Vaginal Microbiota study
 
 ### Repository Description
-This repository contains details in support of the submitted manuscript entitled Evidence that vertical transmission of the vaginal microbiota can persist into adolescence by Christine M. Bassis, Kaylie A. Bullock, Daniel E. Sack, Katie Saund, Ali Pirani, Evan S. Snitkin, Veronica I. Alaniz, Elisabeth H. Quint, Vincent B. Young and Jason D. Bell.
+This repository contains details in support of the submitted manuscript entitled, "Evidence that vertical transmission of the vaginal microbiota can persist into adolescence" by Christine M. Bassis, Kaylie A. Bullock, Daniel E. Sack, Katie Saund, Ali Pirani, Evan S. Snitkin, Veronica I. Alaniz, Elisabeth H. Quint, Vincent B. Young and Jason D. Bell.
+
 This repository includes:
  -the mothur batch file used to process 16S rRNA gene
  -mothur output files used in final analysis and figures
@@ -15,8 +16,10 @@ This repository includes:
 **Conclusions:** Both community-level analysis and isolate genome sequence analysis provide evidence of birth-mode dependent transmission and persistence of at least some members of the vaginal microbiota.
 
 ### Raw sequence data
-Bacterial 16S rRNA gene sequences: NCBI BioProject [PRJNA547595] (https://www.ncbi.nlm.nih.gov/bioproject/PRJNA547595)
-*Lactobacillus crispatus* genome sequences: NCBI BioProject [PRJNA547620] (https://www.ncbi.nlm.nih.gov/bioproject/PRJNA547620)
+Bacterial 16S rRNA gene sequences: NCBI BioProject [PRJNA547595]
+(https://www.ncbi.nlm.nih.gov/bioproject/PRJNA547595)
+*Lactobacillus crispatus* genome sequences: NCBI BioProject [PRJNA547620]
+(https://www.ncbi.nlm.nih.gov/bioproject/PRJNA547620)
 
 ### Contributors
 Christine M. Bassis (cbassis@umich.edu), Kaylie A. Bullock and Katie Saund contributed to this code. Please email cbassis@umich.edu with questions.
