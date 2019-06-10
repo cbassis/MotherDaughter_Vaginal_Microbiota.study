@@ -5,9 +5,9 @@ This repository contains details in support of the submitted manuscript entitled
 
 This repository includes:
 
- - the mothur batch file used to process 16S rRNA gene
+ - the mothur batch file used to process 16S rRNA gene sequences
  
- - mothur output files used in final analysis and figures
+ - mothur output files used in final bacterial community analysis and figures
  
  - R code for manuscript figures, statistics and genomic analysis
   
