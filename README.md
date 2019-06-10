@@ -5,9 +5,11 @@ This repository contains details in support of the submitted manuscript entitled
 
 This repository includes:
 
- -the mothur batch file used to process 16S rRNA gene
- -mothur output files used in final analysis and figures
- -R code for manuscript figures, statistics and genomic analysis
+ - the mothur batch file used to process 16S rRNA gene
+ 
+ - mothur output files used in final analysis and figures
+ 
+ - R code for manuscript figures, statistics and genomic analysis
   
 #### Manuscript Abstract
 **Background:** Factors that influence vaginal microbiota composition, including its source, are not well understood. To determine if vaginal microbiota transmission from mother to daughter at birth influences the human vaginal microbiota composition in adolescence, we investigated the relationship between the vaginal microbiota of 13 mother/daughter pairs and the daughter’s birth mode. 
@@ -17,11 +19,9 @@ This repository includes:
 **Conclusions:** Both community-level analysis and isolate genome sequence analysis provide evidence of birth-mode dependent transmission and persistence of at least some members of the vaginal microbiota.
 
 ### Raw sequence data
-Bacterial 16S rRNA gene sequences: NCBI BioProject [PRJNA547595]
-(https://www.ncbi.nlm.nih.gov/bioproject/PRJNA547595)
+Bacterial 16S rRNA gene sequences: NCBI BioProject [PRJNA547595](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA547595)
 
-*Lactobacillus crispatus* genome sequences: NCBI BioProject [PRJNA547620]
-(https://www.ncbi.nlm.nih.gov/bioproject/PRJNA547620)
+*Lactobacillus crispatus* genome sequences: NCBI BioProject [PRJNA547620](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA547620)
 
 ### Contributors
 Christine M. Bassis (cbassis@umich.edu), Kaylie A. Bullock and Katie Saund contributed to this code. Please email cbassis@umich.edu with questions.
