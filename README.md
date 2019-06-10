@@ -4,6 +4,7 @@
 This repository contains details in support of the submitted manuscript entitled, "Evidence that vertical transmission of the vaginal microbiota can persist into adolescence" by Christine M. Bassis, Kaylie A. Bullock, Daniel E. Sack, Katie Saund, Ali Pirani, Evan S. Snitkin, Veronica I. Alaniz, Elisabeth H. Quint, Vincent B. Young and Jason D. Bell.
 
 This repository includes:
+
  -the mothur batch file used to process 16S rRNA gene
  -mothur output files used in final analysis and figures
  -R code for manuscript figures, statistics and genomic analysis
@@ -18,6 +19,7 @@ This repository includes:
 ### Raw sequence data
 Bacterial 16S rRNA gene sequences: NCBI BioProject [PRJNA547595]
 (https://www.ncbi.nlm.nih.gov/bioproject/PRJNA547595)
+
 *Lactobacillus crispatus* genome sequences: NCBI BioProject [PRJNA547620]
 (https://www.ncbi.nlm.nih.gov/bioproject/PRJNA547620)
 
