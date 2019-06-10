@@ -1,0 +1,187 @@
+---
+title: "*L. crispatus* genomic figures and calculations"
+author: "Katie Saund, modified by Christine Bassis"
+date: "1/23/2019, 4/24/19, 6/10/19"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+This file contains all of the genome-related calculations and figures required for Dr. Christine Bassis's *L. crispatus* paper.
+```{r}
+# LIBRARIES -------------------------------------------------------------------#
+require(ape)
+require(phytools)
+require(pheatmap)
+require(tidyverse)
+```
+
+# Minimum code to reproduce pairwise SNP distances: 
+```{r}
+# INPUT RECOMBINATION FILTERED SEQUENCE ALIGNMENT -----------------------------#
+# Note: CB1=UMP1M1, CB2=UMP1M2 and CB3=UMP1D1
+dna <- read.dna(file = "2019_01_09_13_48_58_lactobacillus_crispatus_ST1_genome_aln_w_alt_allele_unmapped_gubbins.filtered_polymorphic_sites.fasta", 
+                 format = "fasta")
+
+# COUNT SNP DISTANCE BETWEEN ISOLATES.
+distance        <- dist.dna(dna, model = "N", pairwise.deletion = TRUE)
+distance_matrix <- as.matrix(distance)
+head(distance_matrix)
+```
+Pairwise SNP distances between mother samples (CB1 and CB2) is `r distance_matrix[row.names(distance_matrix) == "CB2", colnames(distance_matrix) == "CB1"]` SNPs. 
+Pairwise SNP distances between CB1 and daughter sample is `r distance_matrix[row.names(distance_matrix) == "CB1", colnames(distance_matrix) == "CB3"]` SNPs. 
+Pairwise SNP distances between CB2 and daughter sample is `r distance_matrix[row.names(distance_matrix) == "CB2", colnames(distance_matrix) == "CB3"]` SNPs. 
+
+# Plot pairwise SNP distances as a heatmat
+```{r}
+# ALL SAMPLES INCLUDED IN HEATMAP ---------------------------------------------#
+pheatmap(distance_matrix, show_rownames = TRUE, show_colnames = TRUE, main = "Recombination-filtered pairwise SNP distances")
+
+# ONLY MOTHER AND DAUGHTER SAMPLES INCLUDED IN HEATMAP ------------------------#
+mother_daughter_ids <- c("CB1", "CB2", "CB3")
+mother_daughter_distance_matrix <- distance_matrix[row.names(distance_matrix) %in% mother_daughter_ids, colnames(distance_matrix) %in% mother_daughter_ids]
+mother_daughter_distance_matrix[lower.tri(mother_daughter_distance_matrix, diag = FALSE)] <- NA
+pheatmap(mother_daughter_distance_matrix, display_numbers = TRUE, cluster_rows = FALSE, cluster_cols = FALSE, main = "Recombination-filtered pairwise SNP distances") #, filename = "L_crispatus_heatmap.pdf")
+# Note: to save heatmap uncomment "filename = L_crispatus_heatmap.pdf". 
+
+```
+
+# Minimum code to plot phylogenetic tree: 
+```{r}
+# INPUT RECOMBINATION FILTERED RAXML TREE -------------------------------------#
+tree <- read.tree(file = "RAxML_bipartitions.2019_01_09_13_48_58_lactobacillus_crispatus_ST1_genome_aln_w_alt_allele_unmapped_gubbins.filtered_polymorphic_sites_raxML")
+# Midpoint root tree
+tree <- midpoint.root(tree)
+tree<-drop.tip(tree, tip = c("SRR515126", "SRR515127")) #Run SRR515126 and run SRR515127 were from the same BioSamples, FB049-03 (SAMN01057066) and FB077-07 (SAMN01057067), as run SRR515552 and run SRR515554, respectively. So I dropped their trips from the final tree.
+plot(tree)
+```
+
+# Code to make pretty phylogenetic tree
+```{r}
+# READ IN SAMPLE METADATA -----------------------------------------------------#
+sample_ids <- read.table("combined_L_crispatus_metadata.tsv", 
+                         sep = "\t",  
+                         header = TRUE, 
+                         stringsAsFactors = FALSE)
+
+# SET UP BOOTSTRAP VALUE PLOTTING ---------------------------------------------#
+color_function   <- colorRampPalette(c("red", "blue"))
+bootstrap_colors <- color_function(100)[as.numeric(tree$node.label[2:length(tree$node.label)])]
+bootstrap_colors <- append(color_function(100)[100], bootstrap_colors)
+
+# SET UP TIP LABELS (COLORS AND SHAPES) ---------------------------------------#
+# hex code source: "http://colorbrewer2.org/#type=diverging&scheme=PiYG&n=4"
+human_vagina_col <- "#d01c8b"
+human_urinary_tract_col  <- "#f1b6da"
+other_unknown_col       <- "#b8e186"
+
+human_vagina_mom_shape <- 19
+human_vagina_daughter_shape <- 17
+human_vagina_other_shape <- human_urinary_tract_shape <- 15
+other_unknown_shape <- 15
+
+# SET UP SOURCE GROUPS --------------------------------------------------------#
+human_vagina_mom_group <- c("CB1", "CB2")
+human_vagina_daughter_group <- "CB3"
+human_vagina_other_group <- sample_ids %>%
+  filter(Isolate_Source == "Human_vagina") %>%
+  select(Run, Name, BioSample)
+
+human_urinary_tract_group <- sample_ids %>%
+  filter(Isolate_Source == "Human_urinary_tract") %>%
+  select(Run, Name, BioSample)
+
+other_unknown_group <- sample_ids %>%
+  filter(Isolate_Source == "Other_unknown_source") %>%
+  select(Run, Name, BioSample)
+
+duplicate_to_remove_group <- sample_ids %>%
+  filter(Isolate_Source == "Human_vagina_duplicate") %>%
+  select(Run, Name, BioSample)
+
+# SET UP LEGEND ---------------------------------------------------------------#
+legend_colors <- c(human_vagina_col, human_vagina_col, human_vagina_col, 
+                   human_urinary_tract_col, other_unknown_col)
+legend_names <- c("Human vagina (Pair I, mother, this study)",
+                  "Human vagina (Pair I, daughter, this study", 
+                  "Human vagina", 
+                  "Human urinary tract", 
+                  "Other or unknown source")
+legend_shapes <- c(human_vagina_mom_shape, human_vagina_daughter_shape, 
+                   human_vagina_other_shape, human_urinary_tract_shape, 
+                   other_unknown_shape)
+
+
+# SET UP GENERAL TREE FEATURES ------------------------------------------------#
+dot_size     <- 1.0
+label_offset <- 0.004
+dot_offset   <- 0.0025
+edge_width   <- 1.25
+text_size    <- 0.8
+tree_type    <- "phylogram"
+show_tips    <- TRUE
+
+# PLOT TREE FUNCTION ----------------------------------------------------------#
+plot_crispatus_tree <- function(tr, title, txt_sz, tr_typ, shw_tps, lbl_ffst, dg_wdth, 
+                                mom_gr, dau_gr, 
+                                hvo_gr, hur_gr, 
+                                othun_gr, mom_sh, dau_sh, hvo_sh, hur_sh, 
+                                othun_sh, hv_col, hu_col, othun_col, 
+                                dt_sz, dt_ffst, lg_name, lg_col, lg_sh, lg_loc, 
+                                btstrp_col){
+  plot(tr, cex = txt_sz, type = tr_typ, show.tip.label = shw_tps, main = title, label.offset = lbl_ffst,edge.width = dg_wdth)
+  # label tips with colors
+  # Mom
+  tiplabels(tip = c(1:Ntip(tr))[tr$tip.label %in% unlist(mom_gr)], pch = mom_sh, cex = dt_sz, col = hv_col, offset = dt_ffst)
+  # Daughter
+  tiplabels(tip = c(1:Ntip(tr))[tr$tip.label == unlist(dau_gr)], pch = dau_sh, cex = dt_sz, col = hv_col, offset = dt_ffst)
+  # Other vaginal samples
+  tiplabels(tip = c(1:Ntip(tr))[tr$tip.label%in% unlist(hvo_gr)], pch = hvo_sh, cex = dt_sz, col = hv_col, offset = dt_ffst)
+  # Urinary tract
+  tiplabels(tip = c(1:Ntip(tr))[tr$tip.label%in% unlist(hur_gr)], pch = hur_sh, cex = dt_sz, col = hu_col, offset = dt_ffst)
+  # Other or unknown
+  tiplabels(tip = c(1:Ntip(tr))[tr$tip.label%in% unlist(othun_gr)], pch = othun_sh, cex = dt_sz, col = othun_col, offset = dt_ffst)
+  
+  # Bootstrap values on nodes
+  #nodelabels(pch = 19, col = btstrp_col, cex = txt_sz * .75)
+  
+  # add legend
+  legend(lg_loc, legend = lg_name, col = lg_col, pch = lg_sh, bty = "n", cex = txt_sz, title = "Source")
+  #legend("left", col = color_function(100)[c(100, 1)], legend = c("100%", "0%"), pch = 19, title = "Bootstrap support", cex = txt_sz, bty = "n")
+}
+  
+# PLOT TREE -------------------------------------------------------------------#
+#pdf("L_crispatus_tree_bootstraps_not_shown.pdf")
+plot_crispatus_tree(tree, "Recombination filtered RAxML", text_size, 
+                    tree_type, show_tips, label_offset, edge_width, 
+                    human_vagina_mom_group, human_vagina_daughter_group, 
+                    human_vagina_other_group, human_urinary_tract_group, other_unknown_group, human_vagina_mom_shape, 
+                    human_vagina_daughter_shape, human_vagina_other_shape, 
+                    human_urinary_tract_shape, other_unknown_shape,
+                    human_vagina_col, human_urinary_tract_col, other_unknown_col, dot_size, dot_offset, legend_names, legend_colors,
+                    legend_shapes, "bottomleft", bootstrap_colors)
+#dev.off()
+# Note: to save tree uncomment both pdf(tree.pdf) and dev.off()
+```
+#Calculating the number of generations or doublings needed to get the observed SNPs if the mutation rate were the same as _L. casei_ Zhang
+##Average length of the mother/daughter _L. crispatus_ genomes minus the recombinant regions = 940,943 bp
+##Mutation rates for _L. casei_ Zhang from this [paper](https://bmcgenomics-biomedcentral-com.proxy.lib.umich.edu/articles/10.1186/s12864-017-3710-x)
+##Mutation rate of _L. casei_ Zhang without antibiotics: 1.0x10-9 bp/generation
+##Time: 20 years= 20x365 days= 20x365x24 hours
+##Assuming all mutations were non-convergent, the number of mutations accumulated in 20 years = #SNPs between mother and daughter/2 
+```{r}
+# Number of generations (using without antibiotics mutation rate, 25 SNP difference)
+(25/2)/(940943*1.0*10^-9)
+#Doubling time or generation time in days
+(20*365*940943*1.0*10^-9)/(25/2)
+#Doubling time or generation time in hours
+(20*365*24*940943*1.0*10^-9)/(25/2)
+
+# Number of generations (using without antibiotics mutation rate, 16 SNP difference)
+(16/2)/(940943*1.0*10^-9)
+#Doubling time or generation time in days
+(20*365*940943*1.0*10^-9)/(16/2)
+#Doubling time or generation time in hours
+(20*365*24*940943*1.0*10^-9)/(16/2)
+```
+##The without antibiotics doubling times of 13.2 hours and 20.6 hours are in the range estimated for other organisms in their natural environment in this [paper](https://royalsocietypublishing.org/doi/full/10.1098/rspb.2018.0789)
