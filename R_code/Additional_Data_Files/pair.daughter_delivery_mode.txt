@@ -1,0 +1,14 @@
+Pair	Daughter_delivery_mode	Daughter_delivery_mode_label
+B	2	Vaginal
+E	2	Vaginal
+U	2	Vaginal
+J	1	C-section
+Q	2	Vaginal
+F	2	Vaginal
+L	1	C-section
+N	2	Vaginal
+P	1	C-section
+S	2	Vaginal
+A	2	Vaginal
+D	2	Vaginal
+T	2	Vaginal
