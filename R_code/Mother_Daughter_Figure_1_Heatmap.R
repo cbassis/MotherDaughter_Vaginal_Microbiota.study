@@ -22,7 +22,7 @@ par(mar=c(0,0,0,0))
 heatmap.2(otu.rel.filtered, col=myCol3, breaks=myBreaks2, cexRow=0.5, cexCol=0.5, trace="none", dendrogram="none") 
 
 #meta1<-read.table(file="motherdaughterquestionairre_data_meta1.txt", header=TRUE)
-##subjects.and.samples<-read.table(file = "subject.sample.pair.txt", header = TRUE) ##could not find subject.sample.pair.txt but did find motherdaughter.meta.heatmap.txt so I skipped ahead to that
+##subjects.and.samples<-read.table(file = "subject.sample.pair.txt", header = TRUE) 
 ##meta<-merge(meta1, subjects.and.samples, by.x=c("Subject"), by.y=c("Subject"))
 #write.table(meta, "motherdaughter.meta.heatmap.txt", quote = FALSE, sep = "\t", col.names = NA) 
 ##in excel, moved Sample and Pair columns to the front of the table, deleted row numbers in column A in motherdaughter.meta.heatmap.txt
@@ -32,7 +32,7 @@ meta.seqok<-merge(seqok, meta, by.x=c("Group"), by.y=c("Sample"))
 within_pair_dist<-read.table(file="average.within.pair.distances.plus.txt", header=TRUE) #Made this file on 2/9/18, see 121517.distance.seqok.R
 meta.dist<-merge(meta, within_pair_dist, by.x=c("Pair"), by.y=c("Pair"))
 meta.otu.rel.filtered<-merge(meta.dist, otu.rel.filtered, by.x=c("Sample"), by.y=c("row.names"))
-colnames(meta.otu.rel.filtered)[1]<- "Sample" ##Not sure what this line does (CB, 5/25/16)
+colnames(meta.otu.rel.filtered)[1]<- "Sample" ##Not sure I need this line
 write.table(meta.otu.rel.filtered, "motherdaughter.otu.meta.heatmap.txt", quote=FALSE, sep = "\t", col.names = NA)
 
 ### made motherdaughter.otu.heatmap.ordered.txt in excel: starting with motherdaughter.otu.meta.heatmap.txt, copying Sample column to Time_sample and replacing baseline B with 0,
@@ -44,7 +44,7 @@ meta2<-read.table(file = "motherdaughter.otu.heatmap.ordered.wcolumns.txt", head
 otu.ordered.rel.filtered.matrix<-as.matrix(otu.ordered.rel.filtered)
 
 ##To check out heatmap:
-heatmap.2(otu.ordered.rel.filtered.matrix, col=myCol3, breaks=myBreaks2, cexRow=0.2, cexCol=0.5, trace="none", density.info="none", dendrogram="none", Rowv=FALSE) ##Does not seem to be in specified order
+heatmap.2(otu.ordered.rel.filtered.matrix, col=myCol3, breaks=myBreaks2, cexRow=0.2, cexCol=0.5, trace="none", density.info="none", dendrogram="none", Rowv=FALSE)
 
 #Made OTUlist.txt from OTUs in motherdaughter.otu.heatmap.ordered.txt, deleted " from motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.0.03.cons.taxonomy, saved as unix file
 ###Made motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.0.03.cons.taxonomy.subset.txt with Alyx Schubert's code:
