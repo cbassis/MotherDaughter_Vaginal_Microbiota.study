@@ -37,4 +37,4 @@ summary.shared(shared=motherdaughter.files.trim.contigs.good.unique.good.filter.
 dist.shared(shared=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.0.03.pick.shared, calc=thetayc)
 pcoa(phylip=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.0.03.pick.thetayc.0.03.lt.dist)
 corr.axes(shared=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.0.03.pick.shared, axes=motherdaughter.files.trim.contigs.good.unique.good.filter.unique.precluster.pick.pick.an.unique_list.0.03.pick.thetayc.0.03.lt.pcoa.axes, numaxes=2)
-
+summary.single(shared=motherdaughter.files.trim.contigs.good.unique.god.filter.unique.precluster.pick.pick.an.unique_list.0.03.pick.shared, calc=invsimpson-shannon-npshannon-sobs-chao-nseqs)
